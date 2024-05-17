@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>SoulWorker</title>
+    <link rel="stylesheet" href="css/81.css">
+    <link rel="icon" type="image/png" href="image/logo.webp">
+</head>
+
+
+<body>
+    <div class="container">
+        <div class="form-box">
+            <!-- 登录 -->
+            <div class="login-box">
+                <h1>SoulWorker</h1>
+                <input id="username" type="text" placeholder="用户名">
+                <input id="password" type="password" placeholder="密码">
+                <button id="register-button">注册</button>
+            </div>
+        </div>
+        <div class="con-box right">
+            <h2><span>欢迎来到天理社区</span></h2>
+            <p><span>快来游玩灵魂武器吧</span></p>
+            <img class="image1" src="image/pd.png" alt="">
+        </div>
+    </div>
+    <script>
+        // 要操作到的元素
+        let registerButton = document.getElementById('register-button');
+        let usernameInput = document.getElementById('username');
+        let passwordInput = document.getElementById('password');
+
+        // 注册按钮点击事件
+        registerButton.addEventListener('click', async () => {
+            let username = usernameInput.value;
+            let password = passwordInput.value;
+
+            let response = await fetch('http://10.190.246.22:8080/api/reg', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `username=${username}&password=${password}`,
+            });
+
+            let data = await response.json();
+
+            // 根据返回的 code 弹窗提示用户
+            if (data.code === "401") {
+                alert("该用户名已存在，请重新输入！");
+            } else if (data.code === "200") {
+                alert("注册成功！");
+                // 注册成功后，刷新页面
+                location.reload();
+            } else {
+                // 如果返回的 code 不是 401 也不是 200，弹窗显示返回的消息
+                alert(data.msg);
+            }
+        });
+    </script>
+</body>
+
+</html>
