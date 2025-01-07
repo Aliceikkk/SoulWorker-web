@@ -25,14 +25,18 @@ body{
     border-radius: 10px; /* 添加圆角边框 */
     padding: 0.5px; /* 添加内边距 */
     box-shadow: 5px 5px 5px rgba(0,0,0,0.1);
-    /* 相对定位 */
-    position: relative;
+    /* 固定定位 */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 .form-box{
-    /* 绝对定位 */
-    position: absolute;
-    top: -10%;
-    left: 5%;
+    /* 固定定位 */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-95%, -50%);
     background-color: #d3b7d8;
     width: 320px;
     height: 500px;
