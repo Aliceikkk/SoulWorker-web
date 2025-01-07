@@ -9,7 +9,6 @@ import (
 	"math/rand"
 	"net/http"
 	"strings"
-	"sync"
 	"time"
 
 	_ "github.com/denisenkom/go-mssqldb"
@@ -108,7 +107,7 @@ func main() {
 
 func getRandomIP() int {
 	rand.Seed(time.Now().UnixNano())
-	return rand.Intn(90000000) + 10000000 
+	return rand.Intn(90000000) + 10000000
 }
 
 func sha1Encode(input string) []byte {

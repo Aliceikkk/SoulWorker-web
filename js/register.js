@@ -4,10 +4,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const usernameInput = document.getElementById('username');
     const passwordInput = document.getElementById('password');
 
+    // 检查 Swal 是否成功加载
+    function showAlert(options) {
+        if (typeof Swal !== 'undefined') {
+            return Swal.fire(options);
+        } else {
+            // 如果 Swal 未加载，使用原生 alert
+            alert(options.text || options.title);
+            return Promise.resolve();
+        }
+    }
+
     // 检查输入是否为空
     function validateInput() {
         if (!usernameInput.value.trim()) {
-            Swal.fire({
+            showAlert({
                 title: '提示',
                 text: '请输入用户名！',
                 icon: 'warning',
@@ -17,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         if (!passwordInput.value.trim()) {
-            Swal.fire({
+            showAlert({
                 title: '提示',
                 text: '请输入密码！',
                 icon: 'warning',
@@ -40,19 +51,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             // 显示加载中动画
-            Swal.fire({
-                title: '请稍候',
-                text: '正在处理您的注册请求...',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                allowEnterKey: false,
-                showConfirmButton: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: '请稍候',
+                    text: '正在处理您的注册请求...',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            }
 
-            let response = await fetch('http://10.190.246.22:8080/api/reg', {
+            let response = await fetch('http://127.0.0.1:11451/api/reg', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -64,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // 根据返回的 code 显示不同的提示
             if (data.code === "401") {
-                Swal.fire({
+                showAlert({
                     title: '注册失败',
                     text: '该用户名已存在，请重新输入！',
                     icon: 'error',
@@ -72,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     confirmButtonColor: '#3085d6'
                 });
             } else if (data.code === "200") {
-                await Swal.fire({
+                await showAlert({
                     title: '注册成功',
                     text: '欢迎加入天理社区！',
                     icon: 'success',
@@ -83,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 usernameInput.value = '';
                 passwordInput.value = '';
             } else {
-                Swal.fire({
+                showAlert({
                     title: '提示',
                     text: data.msg,
                     icon: 'info',
@@ -92,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
         } catch (error) {
-            Swal.fire({
+            showAlert({
                 title: '错误',
                 text: '注册失败，请稍后重试！',
                 icon: 'error',
